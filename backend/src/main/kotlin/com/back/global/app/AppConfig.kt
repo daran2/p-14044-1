@@ -45,7 +45,7 @@ class AppConfig(
         val isNotProd: Boolean
             get() = !isProd
 
-            private lateinit var _cookieDomain: String
+        private lateinit var _cookieDomain: String
         private lateinit var _siteFrontUrl: String
         private lateinit var _siteBackUrl: String
 
