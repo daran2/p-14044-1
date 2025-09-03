@@ -14,8 +14,8 @@ COPY settings.gradle.kts .
 RUN chmod +x ./gradlew
 
 # Copy the source code for all modules
-COPY back ./back
-COPY front ./front
+COPY .env .
+COPY src src
 
 # Download dependencies
 # Use ./gradlew instead of gradle to ensure the correct wrapper is used
