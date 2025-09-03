@@ -92,6 +92,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): UrlBasedCorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
+            allowedOrigins = listOf("https://cdpn.io", AppConfig.siteFrontUrl)
             allowedOrigins = listOf("https://cdpn.io", "http://localhost:3000")
             allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE")
             allowCredentials = true
