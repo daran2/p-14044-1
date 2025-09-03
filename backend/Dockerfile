@@ -1,39 +1,32 @@
-# First stage: Build stage
+# 첫 번째 스테이지: 빌드 스테이지
 FROM gradle:jdk-21-and-23-graal-jammy AS builder
 
-# Set the working directory
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# Copy the Gradle Wrapper, its directory, and configuration files
-COPY gradlew .
-COPY gradle ./gradle
+# 소스 코드와 Gradle 래퍼 복사
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 
-# Grant execute permissions to the Gradle Wrapper script
-RUN chmod +x ./gradlew
+# 종속성 설치
+RUN gradle dependencies --no-daemon
 
-# Copy the source code for all modules
+# 소스 코드 복사
 COPY .env .
 COPY src src
 
-# Download dependencies
-# Use ./gradlew instead of gradle to ensure the correct wrapper is used
-RUN ./gradlew dependencies --no-daemon
+# 애플리케이션 빌드
+RUN gradle build --no-daemon
 
-# Build the application, excluding tests for speed
-# Target the 'back' module specifically
-RUN ./gradlew :back:build --no-daemon -x test
-
-# Second stage: Runtime stage
+# 두 번째 스테이지: 실행 스테이지
 FROM container-registry.oracle.com/graalvm/jdk:21
 
-# Set the working directory
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# Copy the built JAR file and .env from the builder stage
-COPY --from=builder /app/back/build/libs/*.jar app.jar
+# 첫 번째 스테이지에서 빌드된 JAR 파일 복사
+COPY --from=builder /app/build/libs/*.jar app.jar
 COPY --from=builder /app/.env .env
 
-# Set the entry point to run the application
+# 실행할 JAR 파일 지정
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
