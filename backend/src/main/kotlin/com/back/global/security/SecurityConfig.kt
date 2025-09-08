@@ -103,3 +103,4 @@ class SecurityConfig(
             registerCorsConfiguration("/api/**", configuration)
         }
     }
+}
