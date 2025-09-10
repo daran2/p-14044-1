@@ -194,6 +194,17 @@ mkswap /swapfile
 swapon /swapfile
 sh -c 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab'
 
+# 타임존 설정
+timedatectl set-timezone Asia/Seoul
+
+# 환경변수 세팅(/etc/environment)
+echo "PASSWORD_1=${var.password_1}" >> /etc/environment
+echo "APP_1_DOMAIN=${var.app_1_domain}" >> /etc/environment
+echo "APP_1_DB_NAME=${var.app_1_db_name}" >> /etc/environment
+echo "GITHUB_ACCESS_TOKEN_1_OWNER=${var.github_access_token_1_owner}" >> /etc/environment
+echo "GITHUB_ACCESS_TOKEN_1=${var.github_access_token_1}" >> /etc/environment
+source /etc/environment
+
 # 도커 설치 및 실행/활성화
 yum install docker -y
 systemctl enable docker
